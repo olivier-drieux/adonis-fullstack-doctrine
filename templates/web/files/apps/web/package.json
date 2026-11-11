@@ -1,0 +1,26 @@
+{
+  "name": "web",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@inertiajs/react": "^3.9.1",
+    "@scope/api-client": "workspace:*",
+    "@scope/shared-types": "workspace:*",
+    "@scope/ui": "workspace:*",
+    "@sentry/react": "^10.0.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "tamagui": "^3.2.0"
+  },
+  "devDependencies": {
+    "@adonisjs/vite": "^6.0.0",
+    "@vitejs/plugin-react": "^6.0.0",
+    "typescript": "^6.0.0",
+    "vite": "^8.0.0"
+  }
+}

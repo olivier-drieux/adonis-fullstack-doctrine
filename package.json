@@ -1,0 +1,21 @@
+{
+  "name": "adonis-fullstack-doctrine",
+  "version": "0.4.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "doctrine:resolve": "node plugins/adonis-fullstack-doctrine/skills/adonis-fullstack-doctrine/scripts/resolve-doctrine.mjs",
+    "doctrine:doctor": "node plugins/adonis-fullstack-doctrine/skills/adonis-fullstack-doctrine/scripts/doctor.mjs",
+    "doctrine:test": "node --test plugins/adonis-fullstack-doctrine/skills/adonis-fullstack-doctrine/scripts/doctrine.test.mjs plugins/adonis-fullstack-doctrine/skills/adonis-fullstack-doctrine/scripts/doctor.test.mjs plugins/adonis-fullstack-doctrine/skills/adonis-fullstack-doctrine/scripts/evaluation.test.mjs plugins/adonis-fullstack-doctrine/skills/adonis-fullstack-doctrine/scripts/check-versions.test.mjs scripts/check-commit-message.test.mjs",
+    "doctrine:check": "node plugins/adonis-fullstack-doctrine/skills/adonis-fullstack-doctrine/scripts/generate-indexes.mjs --check",
+    "doctrine:write": "node plugins/adonis-fullstack-doctrine/skills/adonis-fullstack-doctrine/scripts/generate-indexes.mjs --write",
+    "doctrine:links": "node plugins/adonis-fullstack-doctrine/skills/adonis-fullstack-doctrine/scripts/check-links.mjs",
+    "doctrine:versions": "node plugins/adonis-fullstack-doctrine/skills/adonis-fullstack-doctrine/scripts/check-versions.mjs",
+    "templates:check": "node scripts/template-check.mjs",
+    "hooks:install": "node scripts/install-hooks.mjs",
+    "check": "pnpm doctrine:test && pnpm doctrine:check && pnpm doctrine:links && pnpm doctrine:versions && pnpm templates:check"
+  }
+}

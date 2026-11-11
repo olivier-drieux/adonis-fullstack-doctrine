@@ -1,0 +1,27 @@
+{
+  "name": "api",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "node ace serve --hmr",
+    "build": "node ace build",
+    "typecheck": "tsc --noEmit",
+    "test": "node ace test",
+    "generate:api-client": "node scripts/generate_api_client.mjs"
+  },
+  "dependencies": {
+    "@adonisjs/core": "^7.6.0",
+    "@adonisjs/inertia": "^5.0.0",
+    "@adonisjs/lucid": "^22.0.0",
+    "@adonisjs/queue": "^0.6.2",
+    "@adonisjs/session": "^8.3.0",
+    "@adonisjs/shield": "^9.0.0",
+    "@sentry/node": "^10.0.0",
+    "mysql2": "^3.0.0"
+  },
+  "devDependencies": {
+    "@adonisjs/assembler": "^8.0.0",
+    "@adonisjs/tsconfig": "^2.0.0",
+    "typescript": "^6.0.0"
+  }
+}

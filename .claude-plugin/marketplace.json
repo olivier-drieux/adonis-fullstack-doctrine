@@ -1,0 +1,14 @@
+{
+  "name": "adonis-fullstack-doctrine",
+  "description": "Doctrine fail-closed pour projets AdonisJS 7 + Inertia 3 + Tamagui, avec mobile Expo optionnel, monorepo pnpm, six surfaces HTTP, MariaDB, queue Redis, Tuyau et boucle d'apprentissage.",
+  "owner": {
+    "name": "Olivier Drieux"
+  },
+  "plugins": [
+    {
+      "name": "adonis-fullstack-doctrine",
+      "source": "./plugins/adonis-fullstack-doctrine",
+      "description": "Doctrine fail-closed pour projets AdonisJS 7 + Inertia 3 + React 19 + Tamagui, avec mobile Expo optionnel, monorepo pnpm, six surfaces HTTP, MariaDB, queue Redis, Tuyau, TanStack Query/Form et commande /doctrine-learn."
+    }
+  ]
+}

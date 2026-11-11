@@ -1,0 +1,970 @@
+{
+  "version": "0.4.0",
+  "profiles": [
+    "web",
+    "web-mobile",
+    "api-only"
+  ],
+  "surfaces": [
+    "web",
+    "api.internal",
+    "api.external",
+    "webhooks",
+    "runtime",
+    "public",
+    "mobile",
+    "cross-cutting"
+  ],
+  "slices": [
+    "setup",
+    "monorepo",
+    "routing",
+    "validation",
+    "lucid-model",
+    "migration",
+    "service",
+    "transformer",
+    "policy",
+    "auth-browser",
+    "auth-mobile",
+    "api-endpoint",
+    "webhook",
+    "public-link",
+    "queue-job",
+    "scheduled-work",
+    "inertia-page",
+    "react-component",
+    "tamagui-component",
+    "form-web",
+    "form-mobile",
+    "list",
+    "image",
+    "keyboard",
+    "dates",
+    "testing",
+    "operations",
+    "data-protection",
+    "doctrine-learning"
+  ],
+  "rules": [
+    {
+      "id": "hb.stack-adonisjs",
+      "level": "hard_blocker",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "setup"
+      ],
+      "always": true,
+      "title": "AdonisJS 7 et packages officiels d'abord",
+      "reference": "setup.md#runtime"
+    },
+    {
+      "id": "hb.stack-baseline",
+      "level": "hard_blocker",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "setup"
+      ],
+      "always": true,
+      "title": "Baseline Node 24, TypeScript 6, Vite 8, React 19, Inertia 3",
+      "reference": "setup.md#baseline"
+    },
+    {
+      "id": "hb.stack-pnpm-monorepo",
+      "level": "hard_blocker",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "monorepo"
+      ],
+      "always": true,
+      "title": "Monorepo pnpm permanent",
+      "reference": "monorepo.md#workspace"
+    },
+    {
+      "id": "hb.stack-layout",
+      "level": "hard_blocker",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "monorepo"
+      ],
+      "always": true,
+      "title": "apps/ pour les applications, packages/ pour les bibliothèques",
+      "reference": "monorepo.md#layout"
+    },
+    {
+      "id": "hb.stack-web-build",
+      "level": "hard_blocker",
+      "profiles": [
+        "web",
+        "web-mobile"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "monorepo"
+      ],
+      "always": true,
+      "title": "App web séparée, build vers l'API, déploiement unique",
+      "reference": "web.md#build"
+    },
+    {
+      "id": "hb.stack-mariadb",
+      "level": "hard_blocker",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "lucid-model",
+        "migration"
+      ],
+      "always": true,
+      "title": "MariaDB et Lucid, SQLite uniquement en test",
+      "reference": "data.md#mariadb"
+    },
+    {
+      "id": "hb.stack-redis-queue",
+      "level": "hard_blocker",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "queue-job",
+        "scheduled-work"
+      ],
+      "always": true,
+      "title": "Queue Redis avec @adonisjs/queue",
+      "reference": "queue.md#redis"
+    },
+    {
+      "id": "hb.stack-tuyau",
+      "level": "hard_blocker",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "api-endpoint",
+        "monorepo"
+      ],
+      "always": true,
+      "title": "Client Tuyau généré dans packages/api-client",
+      "reference": "api.md#tuyau"
+    },
+    {
+      "id": "hb.stack-tamagui",
+      "level": "hard_blocker",
+      "profiles": [
+        "web",
+        "web-mobile"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "tamagui-component"
+      ],
+      "always": true,
+      "title": "Tamagui seul pour l'UI web et native",
+      "reference": "tamagui.md#single-instance"
+    },
+    {
+      "id": "hb.stack-tamagui-native",
+      "level": "hard_blocker",
+      "profiles": [
+        "web-mobile"
+      ],
+      "surfaces": [
+        "mobile"
+      ],
+      "slices": [
+        "tamagui-component"
+      ],
+      "always": true,
+      "title": "Tamagui natif et animations par plateforme",
+      "reference": "tamagui.md#native"
+    },
+    {
+      "id": "hb.ui-shared-boundary",
+      "level": "hard_blocker",
+      "profiles": [
+        "web-mobile"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "tamagui-component"
+      ],
+      "always": false,
+      "title": "packages/ui : primitives et composants feature-agnostic",
+      "reference": "tamagui.md#boundary"
+    },
+    {
+      "id": "hb.ui-imports",
+      "level": "hard_blocker",
+      "profiles": [
+        "web",
+        "web-mobile"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "tamagui-component",
+        "react-component"
+      ],
+      "always": false,
+      "title": "Importer l'UI depuis @scope/ui, jamais depuis tamagui",
+      "reference": "tamagui.md#imports"
+    },
+    {
+      "id": "ed.ui-theme",
+      "level": "enforced_default",
+      "profiles": [
+        "web",
+        "web-mobile"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "tamagui-component"
+      ],
+      "always": false,
+      "title": "Mécanisme de thème, pas de thème imposé",
+      "reference": "tamagui.md#theme"
+    },
+    {
+      "id": "ed.ui-web-styling",
+      "level": "enforced_default",
+      "profiles": [
+        "web",
+        "web-mobile"
+      ],
+      "surfaces": [
+        "web"
+      ],
+      "slices": [
+        "react-component"
+      ],
+      "always": false,
+      "title": "Tamagui first, CSS Modules en échappatoire",
+      "reference": "web.md#styling"
+    },
+    {
+      "id": "hb.forms-web-inertia",
+      "level": "hard_blocker",
+      "profiles": [
+        "web",
+        "web-mobile"
+      ],
+      "surfaces": [
+        "web"
+      ],
+      "slices": [
+        "form-web"
+      ],
+      "always": false,
+      "title": "Formulaires web avec Inertia",
+      "reference": "forms.md#web"
+    },
+    {
+      "id": "hb.forms-mobile-tanstack",
+      "level": "hard_blocker",
+      "profiles": [
+        "web-mobile"
+      ],
+      "surfaces": [
+        "mobile"
+      ],
+      "slices": [
+        "form-mobile"
+      ],
+      "always": false,
+      "title": "Formulaires mobiles avec TanStack Form",
+      "reference": "forms.md#mobile"
+    },
+    {
+      "id": "hb.forms-server-validation",
+      "level": "hard_blocker",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "form-web",
+        "form-mobile",
+        "validation"
+      ],
+      "always": false,
+      "title": "VineJS serveur, seule source de validation",
+      "reference": "forms.md#validation"
+    },
+    {
+      "id": "hb.api-surfaces",
+      "level": "hard_blocker",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "api-endpoint",
+        "webhook",
+        "public-link",
+        "routing"
+      ],
+      "always": false,
+      "title": "Six surfaces HTTP explicites",
+      "reference": "api.md#surfaces"
+    },
+    {
+      "id": "hb.api-client-single",
+      "level": "hard_blocker",
+      "profiles": [
+        "web-mobile"
+      ],
+      "surfaces": [
+        "mobile"
+      ],
+      "slices": [
+        "api-endpoint"
+      ],
+      "always": false,
+      "title": "Un transport HTTP et un QueryClient uniques côté mobile",
+      "reference": "mobile.md#api-client"
+    },
+    {
+      "id": "ed.api-facade-single",
+      "level": "enforced_default",
+      "profiles": [
+        "web-mobile"
+      ],
+      "surfaces": [
+        "mobile"
+      ],
+      "slices": [
+        "api-endpoint"
+      ],
+      "always": false,
+      "title": "Une façade Tuyau partagée côté mobile",
+      "reference": "mobile.md#api-client"
+    },
+    {
+      "id": "ed.api-error-contract",
+      "level": "enforced_default",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "api-endpoint"
+      ],
+      "always": false,
+      "title": "Contrat d'erreur stable et sûr",
+      "reference": "api.md#errors"
+    },
+    {
+      "id": "hb.api-surface-inventory",
+      "level": "hard_blocker",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "routing"
+      ],
+      "always": false,
+      "title": "Inventaire des surfaces avant refonte de routes",
+      "reference": "api.md#inventory"
+    },
+    {
+      "id": "hb.auth-browser",
+      "level": "hard_blocker",
+      "profiles": [
+        "web",
+        "web-mobile"
+      ],
+      "surfaces": [
+        "web",
+        "api.internal"
+      ],
+      "slices": [
+        "auth-browser"
+      ],
+      "always": false,
+      "title": "Session et cookie pour le navigateur",
+      "reference": "auth.md#browser"
+    },
+    {
+      "id": "hb.auth-mobile",
+      "level": "hard_blocker",
+      "profiles": [
+        "web-mobile"
+      ],
+      "surfaces": [
+        "mobile"
+      ],
+      "slices": [
+        "auth-mobile"
+      ],
+      "always": false,
+      "title": "Access tokens et SecureStore pour le mobile",
+      "reference": "auth.md#mobile"
+    },
+    {
+      "id": "hb.auth-guard-names",
+      "level": "hard_blocker",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "auth-browser",
+        "auth-mobile"
+      ],
+      "always": false,
+      "title": "Guards web et api réservés",
+      "reference": "auth.md#guards"
+    },
+    {
+      "id": "hb.data-lucid",
+      "level": "hard_blocker",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "lucid-model",
+        "migration"
+      ],
+      "always": false,
+      "title": "Lucid uniquement, sans couche repository",
+      "reference": "data.md#lucid"
+    },
+    {
+      "id": "hb.data-migrations",
+      "level": "hard_blocker",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "migration"
+      ],
+      "always": false,
+      "title": "Migrations sûres et testées sur MariaDB",
+      "reference": "data.md#migrations"
+    },
+    {
+      "id": "hb.data-pii",
+      "level": "hard_blocker",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "data-protection"
+      ],
+      "always": false,
+      "title": "Chiffrement et sérialisation allow-list",
+      "reference": "data-protection.md#pii"
+    },
+    {
+      "id": "hb.data-tenancy",
+      "level": "hard_blocker",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "data-protection"
+      ],
+      "always": false,
+      "title": "Frontière de tenant explicite",
+      "reference": "data-protection.md#tenancy"
+    },
+    {
+      "id": "ed.data-retention",
+      "level": "enforced_default",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "data-protection"
+      ],
+      "always": false,
+      "title": "Rétention et purge des données personnelles",
+      "reference": "data-protection.md#retention"
+    },
+    {
+      "id": "hb.mobile-expo",
+      "level": "hard_blocker",
+      "profiles": [
+        "web-mobile"
+      ],
+      "surfaces": [
+        "mobile"
+      ],
+      "slices": [
+        "setup",
+        "react-component"
+      ],
+      "always": false,
+      "title": "Expo, React Native et Expo Router, sans WebView",
+      "reference": "mobile.md#expo"
+    },
+    {
+      "id": "ed.mobile-lists",
+      "level": "enforced_default",
+      "profiles": [
+        "web-mobile"
+      ],
+      "surfaces": [
+        "mobile"
+      ],
+      "slices": [
+        "list"
+      ],
+      "always": false,
+      "title": "FlashList pour les collections longues",
+      "reference": "lists-images.md#flashlist"
+    },
+    {
+      "id": "ed.mobile-images",
+      "level": "enforced_default",
+      "profiles": [
+        "web-mobile"
+      ],
+      "surfaces": [
+        "mobile"
+      ],
+      "slices": [
+        "image"
+      ],
+      "always": false,
+      "title": "expo-image pour les images distantes",
+      "reference": "lists-images.md#expo-image"
+    },
+    {
+      "id": "ed.mobile-keyboard",
+      "level": "enforced_default",
+      "profiles": [
+        "web-mobile"
+      ],
+      "surfaces": [
+        "mobile"
+      ],
+      "slices": [
+        "form-mobile",
+        "keyboard"
+      ],
+      "always": false,
+      "title": "Keyboard controller pour les formulaires",
+      "reference": "mobile.md#keyboard"
+    },
+    {
+      "id": "ed.mobile-overlays",
+      "level": "enforced_default",
+      "profiles": [
+        "web-mobile"
+      ],
+      "surfaces": [
+        "mobile"
+      ],
+      "slices": [
+        "react-component"
+      ],
+      "always": false,
+      "title": "Tamagui Sheet et Dialog par défaut",
+      "reference": "mobile.md#overlays"
+    },
+    {
+      "id": "adv.mobile-dates",
+      "level": "advisory",
+      "profiles": [
+        "web-mobile"
+      ],
+      "surfaces": [
+        "mobile"
+      ],
+      "slices": [
+        "dates"
+      ],
+      "always": false,
+      "title": "Intl pour le formatage, date-fns pour l'arithmétique",
+      "reference": "mobile.md#dates"
+    },
+    {
+      "id": "hb.testing-tiered",
+      "level": "hard_blocker",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "testing"
+      ],
+      "always": false,
+      "title": "Tests rapides SQLite, preuve MariaDB isolée",
+      "reference": "testing.md#tiered"
+    },
+    {
+      "id": "ed.testing-layout",
+      "level": "enforced_default",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "testing"
+      ],
+      "always": false,
+      "title": "tests/functional et tests/unit",
+      "reference": "testing.md#layout"
+    },
+    {
+      "id": "ed.gate-generic",
+      "level": "enforced_default",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "testing"
+      ],
+      "always": false,
+      "title": "Un gate générique, des extensions par projet",
+      "reference": "testing.md#gates"
+    },
+    {
+      "id": "ed.ops-sentry",
+      "level": "enforced_default",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "operations"
+      ],
+      "always": false,
+      "title": "Sentry sur API, web et mobile",
+      "reference": "operations.md#sentry"
+    },
+    {
+      "id": "ed.ops-compose",
+      "level": "enforced_default",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "operations"
+      ],
+      "always": false,
+      "title": "Compose avec API, Redis, MariaDB et Caddy",
+      "reference": "operations.md#compose"
+    },
+    {
+      "id": "hb.ops-logs",
+      "level": "hard_blocker",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "operations",
+        "data-protection"
+      ],
+      "always": false,
+      "title": "Logs redacted, jamais de PII en clair",
+      "reference": "operations.md#logs"
+    },
+    {
+      "id": "ed.feature-order",
+      "level": "enforced_default",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "setup"
+      ],
+      "always": false,
+      "title": "Ordre de construction d'une fonctionnalité",
+      "reference": "api.md#feature-order"
+    },
+    {
+      "id": "ed.naming",
+      "level": "enforced_default",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "setup"
+      ],
+      "always": false,
+      "title": "Nommage canonique des contrôleurs et services",
+      "reference": "api.md#naming"
+    },
+    {
+      "id": "ed.service-layer",
+      "level": "enforced_default",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "service"
+      ],
+      "always": false,
+      "title": "Logique métier dans les services",
+      "reference": "api.md#services"
+    },
+    {
+      "id": "ed.transformer",
+      "level": "enforced_default",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "transformer"
+      ],
+      "always": false,
+      "title": "Le transformer est la frontière de sérialisation",
+      "reference": "api.md#transformers"
+    },
+    {
+      "id": "ed.comments",
+      "level": "enforced_default",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "setup"
+      ],
+      "always": false,
+      "title": "Commenter le pourquoi, jamais le quoi",
+      "reference": "setup.md#comments"
+    },
+    {
+      "id": "adv.thin-controllers",
+      "level": "advisory",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "service"
+      ],
+      "always": false,
+      "title": "Contrôleurs fins et observables",
+      "reference": "api.md#services"
+    },
+    {
+      "id": "adv.prefer-adonis-primitives",
+      "level": "advisory",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "setup"
+      ],
+      "always": false,
+      "title": "Préférer les primitives AdonisJS",
+      "reference": "setup.md#primitives"
+    },
+    {
+      "id": "adv.small-duplication",
+      "level": "advisory",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "service"
+      ],
+      "always": false,
+      "title": "Petite duplication plutôt qu'abstraction vague",
+      "reference": "api.md#services"
+    },
+    {
+      "id": "adv.verify-api-before-use",
+      "level": "advisory",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "setup"
+      ],
+      "always": false,
+      "title": "Vérifier l'API installée avant usage",
+      "reference": "setup.md#verify"
+    },
+    {
+      "id": "hb.public-token-stack",
+      "level": "hard_blocker",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "public"
+      ],
+      "slices": [
+        "public-link"
+      ],
+      "always": false,
+      "title": "Tokens publics : signés ou hachés, jamais réutilisés",
+      "reference": "auth.md#public-tokens"
+    },
+    {
+      "id": "hb.webhook-auth",
+      "level": "hard_blocker",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "webhooks"
+      ],
+      "slices": [
+        "webhook"
+      ],
+      "always": false,
+      "title": "Webhooks fail-closed",
+      "reference": "api.md#webhooks"
+    },
+    {
+      "id": "hb.queue-idempotency",
+      "level": "hard_blocker",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "queue-job",
+        "scheduled-work"
+      ],
+      "always": false,
+      "title": "Jobs idempotents et dispatch après commit",
+      "reference": "queue.md#idempotency"
+    },
+    {
+      "id": "ed.doctrine-learning",
+      "level": "enforced_default",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "doctrine-learning"
+      ],
+      "always": false,
+      "title": "Correction consignée en leçon ou décision",
+      "reference": "patterns/doctrine-learning.md#procedure"
+    },
+    {
+      "id": "hb.doctrine-no-silent-change",
+      "level": "hard_blocker",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "doctrine-learning"
+      ],
+      "always": false,
+      "title": "Aucun changement de règle silencieux",
+      "reference": "patterns/doctrine-learning.md#guardrails"
+    }
+  ]
+}

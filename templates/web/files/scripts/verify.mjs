@@ -1,0 +1,7 @@
+console.log('verify: raccorder ce gate aux commandes du projet')
+console.log('- pnpm typecheck')
+console.log('- pnpm lint')
+console.log('- pnpm test')
+console.log('- build web et API')
+console.log('- fraîcheur du client Tuyau')
+console.log('- migrations à blanc sur MariaDB')

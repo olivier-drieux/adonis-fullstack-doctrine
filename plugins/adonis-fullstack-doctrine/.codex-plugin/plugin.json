@@ -1,0 +1,22 @@
+{
+  "name": "adonis-fullstack-doctrine",
+  "displayName": "AdonisJS Fullstack Doctrine",
+  "description": "Fail-closed doctrine for AdonisJS 7 + Inertia 3 + React 19 + Tamagui, with optional Expo/React Native mobile, pnpm monorepo, six HTTP surfaces, MariaDB, Redis queue, Tuyau, TanStack Query/Form and doctrine learning.",
+  "version": "0.4.0",
+  "author": {
+    "name": "Olivier Drieux"
+  },
+  "license": "MIT",
+  "keywords": [
+    "adonisjs",
+    "adonisjs-v7",
+    "inertia",
+    "inertia-v3",
+    "tamagui",
+    "expo",
+    "react-native",
+    "pnpm",
+    "monorepo",
+    "doctrine"
+  ]
+}

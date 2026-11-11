@@ -1,0 +1,19 @@
+{
+  "name": "my-app",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.9.1",
+  "engines": {
+    "node": ">=24",
+    "pnpm": "12.9.1"
+  },
+  "scripts": {
+    "dev": "pnpm --filter api dev",
+    "dev:web": "pnpm --filter web dev",
+    "build": "pnpm --filter web build && pnpm --filter api build",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test",
+    "verify": "node scripts/verify.mjs"
+  }
+}
