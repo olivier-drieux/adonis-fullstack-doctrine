@@ -73,3 +73,8 @@ test('rôles d\'interface : brique unique, aucun littéral, garde automatique', 
     }
   }
 })
+
+test('la tranche testing charge la garde automatique du style', () => {
+  const selected = ids(resolveDoctrine({ profile: 'web-mobile', surface: 'web', slices: ['testing'] }))
+  assert.ok(selected.has('ed.ui-style-guard'))
+})

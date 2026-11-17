@@ -103,7 +103,32 @@ Un **rôle** est la fonction d'un élément dans l'interface, indépendamment de
 <IconTile name="document" />
 ```
 
-Le doctor signale `ui.literals` pour les couleurs (`#hex`, `rgb(`, `hsl(`), les rayons et les tailles de police numériques non nuls dans `apps/*` et `packages/*` hors `ui`. Il ne voit ni les ombres, ni les espacements, ni les recompositions : ces contrôles appartiennent à la garde du projet.
+Le doctor signale `ui.literals` (avertissement) dans `apps/*` et `packages/*` hors `ui` :
+
+- couleurs : `#hex`, `rgb(`, `rgba(`, `hsl(`, `hsla(` ;
+- rayons, tailles de police et interlignes numériques non nuls, y compris les raccourcis Tamagui et les chaînes : `borderRadius`/`br`, `fontSize`/`fos`, `lineHeight`/`lh`, `border-radius`, `font-size` (`br={12}`, `fontSize="19"`, `borderRadius: 0.5`).
+
+Il ignore les commentaires, `url(#…)`, les valeurs de `to=` et `href=`, et les sélecteurs (`querySelector`, `getElementById`, `closest`, `matches`).
+
+Limites connues, laissées à la garde du projet :
+
+- ombres, espacements et recompositions de rôle ;
+- `line-height` en CSS, valeurs calculées (`size * 2`) ou passées par variable ;
+- un `#abc` hors des cas ignorés peut encore être pris pour une couleur.
+
+Une exception se limite à des fichiers par globs (`*`, `**`, `?`), chemins relatifs à la racine :
+
+```json
+{
+  "hb.ui-no-visual-literals": {
+    "reason": "palette de dessin",
+    "date": "2026-11-17",
+    "files": ["packages/features/src/notes/sketch_*.tsx"]
+  }
+}
+```
+
+Sans `files`, l'exception couvre toute la règle : à éviter.
 
 ## Native
 
