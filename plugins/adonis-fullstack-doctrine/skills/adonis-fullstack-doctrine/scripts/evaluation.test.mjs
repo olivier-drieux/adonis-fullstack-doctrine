@@ -64,3 +64,12 @@ test('transport et façade sont deux règles distinctes', () => {
   assert.ok(selected.has('hb.api-client-single'))
   assert.ok(selected.has('ed.api-facade-single'))
 })
+
+test('rôles d\'interface : brique unique, aucun littéral, garde automatique', () => {
+  for (const slice of ['tamagui-component', 'react-component']) {
+    const selected = ids(resolveDoctrine({ profile: 'web-mobile', surface: 'web', slices: [slice] }))
+    for (const id of ['hb.ui-role-brick', 'hb.ui-no-visual-literals', 'ed.ui-style-guard']) {
+      assert.ok(selected.has(id), `${slice} : règle attendue absente : ${id}`)
+    }
+  }
+})

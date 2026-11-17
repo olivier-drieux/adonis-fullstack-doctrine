@@ -1,5 +1,5 @@
 {
-  "version": "0.4.0",
+  "version": "0.5.0",
   "profiles": [
     "web",
     "web-mobile",
@@ -279,6 +279,61 @@
       "always": false,
       "title": "Tamagui first, CSS Modules en échappatoire",
       "reference": "web.md#styling"
+    },
+    {
+      "id": "hb.ui-role-brick",
+      "level": "hard_blocker",
+      "profiles": [
+        "web",
+        "web-mobile"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "tamagui-component",
+        "react-component"
+      ],
+      "always": true,
+      "title": "Une brique partagée par rôle d'interface",
+      "reference": "tamagui.md#roles"
+    },
+    {
+      "id": "hb.ui-no-visual-literals",
+      "level": "hard_blocker",
+      "profiles": [
+        "web",
+        "web-mobile"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "tamagui-component",
+        "react-component"
+      ],
+      "always": true,
+      "title": "Aucune valeur visuelle littérale hors des tokens",
+      "reference": "tamagui.md#roles"
+    },
+    {
+      "id": "ed.ui-style-guard",
+      "level": "enforced_default",
+      "profiles": [
+        "web",
+        "web-mobile"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "tamagui-component",
+        "react-component",
+        "testing"
+      ],
+      "always": false,
+      "title": "Catalogue des rôles et garde automatique",
+      "reference": "tamagui.md#roles"
     },
     {
       "id": "hb.forms-web-inertia",

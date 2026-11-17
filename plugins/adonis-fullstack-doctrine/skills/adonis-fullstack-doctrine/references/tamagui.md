@@ -81,6 +81,30 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
 Chaque projet fournit sa palette, sa typographie et ses radius. Aucun orange, aucune police, aucun ton ne sont imposés.
 
+## Roles
+
+Règles : `hb.ui-role-brick`, `hb.ui-no-visual-literals`, `ed.ui-style-guard` (décision 0009).
+
+Un **rôle** est la fonction d'un élément dans l'interface, indépendamment de l'écran : action de ligne, retour, tête de ligne, titre de section, état vide, chevron, compteur, chargement, notice, champ.
+
+- **Une brique par rôle**, dans `packages/ui`, identique sur web et natif. Les variantes sont des props de la brique, pas des recompositions.
+- **Rôle nouveau → brique d'abord**, dès la première occurrence ; `adv.small-duplication` ne s'applique pas ici.
+- **Aucun littéral visuel** dans `apps/` ou un package de feature : couleur, rayon, ombre, taille de police, interligne, espacement viennent des tokens.
+- **Catalogue** : la règle d'interface du projet liste chaque rôle avec sa brique et sa variante. Une maquette ou une relecture nomme la brique de chaque élément ; un élément sans rôle connu ouvre une brique ou un arbitrage.
+- **Garde automatique** : le gate `verify` refuse les littéraux (`#hex`, `rgb(`, `borderRadius={12}`, `fontSize={19}`…) et les recompositions connues (pastille `YStack` + icône à la place de la brique de tête). Les exceptions sont nommées dans le registre.
+
+```tsx
+// Interdit : recomposition locale d'un rôle
+<YStack width={40} height={40} borderRadius={12} backgroundColor="#eef2ee">
+  <Icon name="document" />
+</YStack>
+
+// Attendu : la brique du rôle
+<IconTile name="document" />
+```
+
+Le doctor signale `ui.literals` quand une application contient des couleurs hexadécimales ou des rayons numériques.
+
 ## Native
 
 - `@tamagui/native` côté mobile ;
@@ -125,6 +149,8 @@ export type CardProps = GetProps<typeof Card>
 - Un thème défini dans `apps/web` et un autre dans `apps/mobile`.
 - `react-native-web` non dédupliqué dans Vite.
 - Oublier `process.env.TAMAGUI_TARGET = 'web'` dans la config Vite.
+- Recomposer un rôle (pastille, titre, état vide) au lieu d'utiliser sa brique.
+- Écrire une couleur ou un rayon en dur dans une page.
 - Mélanger CSS Modules et props Tamagui sur le même composant sans raison.
 
 ## Tests

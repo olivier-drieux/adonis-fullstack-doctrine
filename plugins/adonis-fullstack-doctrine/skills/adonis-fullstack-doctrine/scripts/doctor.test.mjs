@@ -163,6 +163,21 @@ test('une bibliothèque UI interdite échoue', () => {
   }
 })
 
+test('une valeur visuelle littérale avertit ui.literals', () => {
+  const root = createProject()
+  try {
+    compliant(root)
+    assert.equal(runDoctor({ root, profile: 'web-mobile' }).checks.find((c) => c.id === 'ui.literals').status, 'pass')
+    write(root, 'apps/web/src/pages/home.tsx', "export const Tile = () => <YStack borderRadius={12} backgroundColor='#eef2ee' />\n")
+    const result = runDoctor({ root, profile: 'web-mobile' })
+    const literal = result.checks.find((c) => c.id === 'ui.literals')
+    assert.equal(literal.status, 'warn')
+    assert.equal(literal.rule, 'hb.ui-no-visual-literals')
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+
 test('un logger sans redact échoue', () => {
   const root = createProject()
   try {

@@ -320,6 +320,25 @@ export function runDoctor({ root, profile = 'web-mobile' }) {
     ),
   )
 
+  const literalPattern = /#[0-9a-fA-F]{3,8}\b(?=['"`;)\s,])|borderRadius[=:]\s*\{?\s*\d/
+  const literalFiles = [
+    ...(web ? walk(join(web, 'src')) : []),
+    ...(mobile ? walk(join(mobile, 'src')) : []),
+    ...(mobile ? walk(join(mobile, 'app')) : []),
+  ].filter((file) => /\.(?:tsx|jsx)$/.test(file) && !isTestFile(file) && literalPattern.test(readText(file)))
+  checks.push(
+    check(
+      'ui.literals',
+      'hb.ui-no-visual-literals',
+      literalFiles.length === 0 ? 'pass' : 'warn',
+      literalFiles.length === 0
+        ? 'Aucune couleur hexadécimale ni rayon numérique dans les applications.'
+        : `${literalFiles.length} fichier(s) contiennent des valeurs visuelles littérales.`,
+      literalFiles.slice(0, 5).map((file) => relative(projectRoot, file)).join(', ') || 'apps/web, apps/mobile',
+      'Utiliser les tokens et les briques de rôle de @scope/ui (décision 0009).',
+    ),
+  )
+
   // Mobile forms
   if (profile === 'web-mobile' && mobile) {
     const tanstackForm = dependency(mobilePkg, '@tanstack/react-form')

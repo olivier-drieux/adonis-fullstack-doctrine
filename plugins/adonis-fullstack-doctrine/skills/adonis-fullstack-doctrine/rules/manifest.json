@@ -1,5 +1,5 @@
 {
-  "version": "0.4.0",
+  "version": "0.5.0",
   "profiles": {
     "web": "AdonisJS 7 + Inertia 3 + React 19 + Tamagui web, sans application mobile.",
     "web-mobile": "Profil web complété par Expo/React Native, UI Tamagui partagée et authentification mobile.",
@@ -210,6 +210,41 @@
       "rule": "Utiliser les tokens, props et variantes Tamagui par défaut. Les CSS Modules sont réservés aux cas web-only que Tamagui couvre mal : impression, layout DOM complexe, composant tiers. Tailwind, styled-components et Emotion sont interdits.",
       "rationale": "Deux systèmes de style qui se mélangent produisent des conflits de spécificité et des composants non partageables.",
       "reference": "web.md#styling"
+    },
+    {
+      "id": "hb.ui-role-brick",
+      "level": "hard_blocker",
+      "profiles": ["web", "web-mobile"],
+      "surfaces": ["*"],
+      "slices": ["tamagui-component", "react-component"],
+      "always": true,
+      "title": "Une brique partagée par rôle d'interface",
+      "rule": "Chaque rôle d'interface récurrent (action de ligne, retour, tête de ligne, titre de section, état vide, chevron, compteur, chargement, notice…) a une seule brique dans packages/ui, utilisée à l'identique sur web et natif. Un écran ne recompose jamais un rôle avec des primitives. Un rôle nouveau commence par sa brique, dès la première occurrence. Une forme différente pour un même rôle est un défaut.",
+      "rationale": "Sans brique unique par rôle, chaque écran réinvente sa variante et le style dérive ; corriger après coup exige un audit complet (décision 0009).",
+      "reference": "tamagui.md#roles"
+    },
+    {
+      "id": "hb.ui-no-visual-literals",
+      "level": "hard_blocker",
+      "profiles": ["web", "web-mobile"],
+      "surfaces": ["*"],
+      "slices": ["tamagui-component", "react-component"],
+      "always": true,
+      "title": "Aucune valeur visuelle littérale hors des tokens",
+      "rule": "Couleurs, rayons, ombres, tailles de police, interlignes et espacements viennent des tokens de packages/ui. Aucune valeur en dur dans apps/ ni dans un package de feature. Une exception (palette de dessin, impression) est déclarée dans le registre d'exceptions.",
+      "rationale": "Une valeur littérale est une forme parallèle invisible au thème ; elle diverge au premier changement de token.",
+      "reference": "tamagui.md#roles"
+    },
+    {
+      "id": "ed.ui-style-guard",
+      "level": "enforced_default",
+      "profiles": ["web", "web-mobile"],
+      "surfaces": ["*"],
+      "slices": ["tamagui-component", "react-component", "testing"],
+      "title": "Catalogue des rôles et garde automatique",
+      "rule": "Le projet tient un catalogue rôle → brique et variante dans sa règle d'interface. Le gate verify refuse automatiquement les littéraux visuels et les recompositions connues (lint ou test). Toute maquette et toute relecture rattachent chaque élément à son rôle.",
+      "rationale": "Une règle sans contrôle automatique est oubliée au premier lot pressé ; le catalogue rend la vérification humaine rapide.",
+      "reference": "tamagui.md#roles"
     },
     {
       "id": "hb.forms-web-inertia",
@@ -603,7 +638,7 @@
       "surfaces": ["*"],
       "slices": ["service"],
       "title": "Petite duplication plutôt qu'abstraction vague",
-      "rule": "Deux cas explicites valent mieux qu'un helper générique qui devine. Extraire seulement quand la troisième occurrence est certaine.",
+      "rule": "Deux cas explicites valent mieux qu'un helper générique qui devine. Extraire seulement quand la troisième occurrence est certaine. Ne s'applique pas aux rôles d'interface : voir hb.ui-role-brick.",
       "rationale": "Les abstractions prématurées coûtent plus cher que la duplication locale.",
       "reference": "api.md#services"
     },

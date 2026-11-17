@@ -7,7 +7,7 @@ description: >-
   Tuyau, TanStack Query and TanStack Form, authentication, testing, operations, and
   doctrine learning. Ask exactly one override question on a hard blocker.
 metadata:
-  version: "0.4.0"
+  version: "0.5.0"
 ---
 
 # AdonisJS Fullstack Doctrine
