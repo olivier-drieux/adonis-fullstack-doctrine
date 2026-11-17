@@ -172,6 +172,18 @@ test('une valeur visuelle littérale avertit ui.literals', () => {
       'apps/web/src/pages/home.tsx',
       "export const Home = () => <a href=\"#abc123\"><svg fill=\"url(#fff)\" /><YStack borderRadius={0} backgroundColor=\"$surface\" /></a>\n",
     )
+    write(
+      root,
+      'apps/web/src/pages/links.tsx',
+      [
+        '// issue #123 : ancre fixée',
+        "/* palette #eef2ee retirée */",
+        "export const focus = () => document.querySelector('#add')",
+        "export const byId = () => document.getElementById('#bad')",
+        'export const Links = () => <><Link to="#face" /><a href=\'/x#bad\' /><svg fill="url(\'#fff\')" /></>',
+        '',
+      ].join('\n'),
+    )
     assert.equal(runDoctor({ root, profile: 'web-mobile' }).checks.find((c) => c.id === 'ui.literals').status, 'pass')
 
     for (const [file, content] of [
@@ -179,6 +191,11 @@ test('une valeur visuelle littérale avertit ui.literals', () => {
       ['apps/mobile/src/row.tsx', 'export const Row = () => <YStack borderRadius={12} />\n'],
       ['packages/features/src/title.tsx', 'export const styles = { title: { fontSize: 19 } }\n'],
       ['apps/web/src/shadow.module.css', '.card { box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); }\n'],
+      ['apps/mobile/src/short-radius.tsx', 'export const A = () => <YStack br={12} />\n'],
+      ['apps/mobile/src/short-size.tsx', 'export const B = () => <Text fos={19} />\n'],
+      ['apps/web/src/string-size.tsx', 'export const C = () => <Text fontSize="19" />\n'],
+      ['apps/web/src/fraction-radius.ts', 'export const d = { borderRadius: 0.5 }\n'],
+      ['apps/web/src/line-height.tsx', 'export const E = () => <Text lineHeight={28} />\n'],
     ]) {
       write(root, file, content)
     }
@@ -186,10 +203,26 @@ test('une valeur visuelle littérale avertit ui.literals', () => {
     const literal = result.checks.find((c) => c.id === 'ui.literals')
     assert.equal(literal.status, 'warn')
     assert.equal(literal.rule, 'hb.ui-no-visual-literals')
-    assert.match(literal.message, /^4 fichier/)
+    assert.match(literal.message, /^9 fichier/)
 
     write(root, 'packages/ui/src/tokens.ts', "export const ink = '#1f2421'\n")
-    assert.match(runDoctor({ root, profile: 'web-mobile' }).checks.find((c) => c.id === 'ui.literals').message, /^4 fichier/)
+    assert.match(runDoctor({ root, profile: 'web-mobile' }).checks.find((c) => c.id === 'ui.literals').message, /^9 fichier/)
+
+    write(
+      root,
+      '.doctrine-exceptions.json',
+      json({
+        'hb.ui-no-visual-literals': {
+          reason: 'palette de dessin',
+          date: '2026-11-17',
+          files: ['apps/web/src/pages/tile.tsx', 'apps/mobile/src/**', '**/*.module.css'],
+        },
+      }),
+    )
+    const scoped = runDoctor({ root, profile: 'web-mobile' }).checks.find((c) => c.id === 'ui.literals')
+    assert.equal(scoped.status, 'warn')
+    assert.match(scoped.message, /^4 fichier/)
+    assert.doesNotMatch(scoped.evidence, /tile\.tsx|apps\/mobile|module\.css/)
 
     write(root, '.doctrine-exceptions.json', json({ 'hb.ui-no-visual-literals': { reason: 'palette de dessin', date: '2026-11-17' } }))
     assert.equal(runDoctor({ root, profile: 'web-mobile' }).checks.find((c) => c.id === 'ui.literals').status, 'exception')

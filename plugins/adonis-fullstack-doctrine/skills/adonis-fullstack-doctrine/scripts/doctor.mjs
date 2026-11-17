@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
-import { join, relative, resolve } from 'node:path'
+import { join, relative, resolve, sep } from 'node:path'
 
 const IGNORED = new Set([
   'node_modules',
@@ -89,6 +89,30 @@ function countMatches(directory, pattern, { skipTests = false } = {}) {
   return count
 }
 
+function globToRegExp(glob) {
+  let source = ''
+  for (let index = 0; index < glob.length; index += 1) {
+    const char = glob[index]
+    if (char === '*' && glob[index + 1] === '*') {
+      source += glob[index + 2] === '/' ? '(?:.*/)?' : '.*'
+      index += glob[index + 2] === '/' ? 2 : 1
+    } else if (char === '*') source += '[^/]*'
+    else if (char === '?') source += '[^/]'
+    else source += char.replace(/[.+^${}()|[\]\\]/g, '\\$&')
+  }
+  return new RegExp(`^${source}$`)
+}
+
+// Retire ce qui n'est jamais une valeur visuelle : commentaires, ancres et sélecteurs.
+function stripNonVisual(content) {
+  return content
+    .replace(/\/\*[\s\S]*?\*\//g, ' ')
+    .replace(/(^|[^:'"`\\])\/\/.*$/gm, '$1')
+    .replace(/\b(?:to|href|xlinkHref|xlink:href)\s*=\s*\{?\s*(["'`])[^"'`]*\1/g, ' ')
+    .replace(/\burl\(\s*(["'`]?)#[^)]*\)/g, ' ')
+    .replace(/\b(?:querySelector(?:All)?|getElementById|closest|matches)\(\s*(["'`])[^"'`]*\1/g, ' ')
+}
+
 function check(id, rule, status, message, evidence, recommendation = null) {
   return { id, rule, status, message, evidence, recommendation }
 }
@@ -97,6 +121,8 @@ function applyException(result, exceptions) {
   if (!['fail', 'warn'].includes(result.status)) return result
   const exception = exceptions[result.rule]
   if (!exception) return result
+  // Une exception limitée à des fichiers est appliquée par la vérification elle-même.
+  if (Array.isArray(exception.files)) return result
   const reason = typeof exception === 'string' ? exception : exception.reason
   return {
     ...result,
@@ -323,11 +349,13 @@ export function runDoctor({ root, profile = 'web-mobile' }) {
   // Couleur hexadécimale dans un contexte de valeur (pas une ancre href="#…" ni url(#…)),
   // fonction de couleur, rayon ou taille de police numérique non nul.
   const literalPatterns = [
-    /(?<!href=["'`]|url\()#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{4}|[0-9a-fA-F]{3})\b(?=['"`;)\s,])/,
+    /#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{4}|[0-9a-fA-F]{3})\b(?=['"`;)\s,])/,
     /\b(?:rgba?|hsla?)\(/,
-    /\b(?:borderRadius|fontSize)\s*[=:]\s*\{?\s*[1-9]/,
-    /\b(?:border-radius|font-size)\s*:\s*[1-9]/,
+    /\b(?:borderRadius|br|fontSize|fos|lineHeight|lh)\s*[=:]\s*\{?\s*["'`]?(?:[1-9]|0?\.\d*[1-9])/,
+    /\b(?:border-radius|font-size)\s*:\s*(?:[1-9]|0?\.\d*[1-9])/,
   ]
+  const literalException = exceptions['hb.ui-no-visual-literals']
+  const literalExcluded = Array.isArray(literalException?.files) ? literalException.files.map(globToRegExp) : []
   const featurePackages = existsSync(join(projectRoot, 'packages'))
     ? readdirSync(join(projectRoot, 'packages'), { withFileTypes: true })
         .filter((entry) => entry.isDirectory() && entry.name !== 'ui')
@@ -341,7 +369,9 @@ export function runDoctor({ root, profile = 'web-mobile' }) {
   ].filter((file) => {
     if (!/\.(?:tsx|jsx|ts|css)$/.test(file) || isTestFile(file)) return false
     if (/[\\/]api-client[\\/]|[\\/]shared-types[\\/]/.test(file)) return false
-    const content = readText(file)
+    const path = relative(projectRoot, file).split(sep).join('/')
+    if (literalExcluded.some((pattern) => pattern.test(path))) return false
+    const content = stripNonVisual(readText(file))
     return literalPatterns.some((pattern) => pattern.test(content))
   })
   checks.push(
