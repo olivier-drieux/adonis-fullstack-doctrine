@@ -8,7 +8,7 @@
 - `hb.ui-no-visual-literals` : aucune couleur, rayon, ombre, taille ou espacement littéral hors des tokens.
 - `ed.ui-style-guard` : catalogue des rôles et garde automatique dans le gate `verify`.
 - Doctor : vérification `ui.literals` en avertissement (couleurs, rayons, tailles de police et interlignes littéraux, raccourcis Tamagui compris, dans `apps/*` et `packages/*` hors `ui`). Commentaires, ancres, `url(#…)` et sélecteurs ignorés.
-- Exceptions limitées à des fichiers : `files` (globs) dans `.doctrine-exceptions.json`.
+- Exceptions limitées à des fichiers : `files` (un glob ou une liste) dans `.doctrine-exceptions.json`.
 - Leçon `lessons/interfaces/ui-style-drift.md`.
 - Référence `tamagui.md#roles` et décision `0009-ui-role-bricks.md`.
 

@@ -108,7 +108,7 @@ Le doctor signale `ui.literals` (avertissement) dans `apps/*` et `packages/*` ho
 - couleurs : `#hex`, `rgb(`, `rgba(`, `hsl(`, `hsla(` ;
 - rayons, tailles de police et interlignes numériques non nuls, y compris les raccourcis Tamagui et les chaînes : `borderRadius`/`br`, `fontSize`/`fos`, `lineHeight`/`lh`, `border-radius`, `font-size` (`br={12}`, `fontSize="19"`, `borderRadius: 0.5`).
 
-Il ignore les commentaires, `url(#…)`, les valeurs de `to=` et `href=`, et les sélecteurs (`querySelector`, `getElementById`, `closest`, `matches`).
+Il ignore les commentaires (un `//` ou un `/*` dans une chaîne reste du code), `url(#…)`, les valeurs de `to=` et `href=`, et les sélecteurs (`querySelector`, `getElementById`, `closest`, `matches`).
 
 Limites connues, laissées à la garde du projet :
 
@@ -116,7 +116,7 @@ Limites connues, laissées à la garde du projet :
 - `line-height` en CSS, valeurs calculées (`size * 2`) ou passées par variable ;
 - un `#abc` hors des cas ignorés peut encore être pris pour une couleur.
 
-Une exception se limite à des fichiers par globs (`*`, `**`, `?`), chemins relatifs à la racine :
+Une exception se limite à des fichiers par globs (`*`, `**`, `?`), chemins relatifs à la racine. `files` accepte une liste ou un seul glob :
 
 ```json
 {

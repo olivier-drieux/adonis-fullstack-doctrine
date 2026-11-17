@@ -103,11 +103,49 @@ function globToRegExp(glob) {
   return new RegExp(`^${source}$`)
 }
 
+// Retire les commentaires sans toucher aux chaînes : un `//` ou un `/*` entre guillemets reste du code.
+// Les chaînes ' et " s'arrêtent en fin de ligne, pour qu'une apostrophe de texte JSX ne masque pas la suite.
+function stripComments(content, { lineComments }) {
+  let output = ''
+  let quote = null
+  for (let index = 0; index < content.length; index += 1) {
+    const char = content[index]
+    const next = content[index + 1]
+    if (quote) {
+      output += char
+      if (char === '\\' && next !== undefined) {
+        output += next
+        index += 1
+      } else if (char === quote || (char === '\n' && quote !== '`')) quote = null
+      continue
+    }
+    if (char === '/' && next === '*') {
+      const end = content.indexOf('*/', index + 2)
+      const stop = end === -1 ? content.length : end + 2
+      output += content.slice(index, stop).replace(/[^\n]/g, ' ')
+      index = stop - 1
+      continue
+    }
+    if (lineComments && char === '/' && next === '/' && content[index - 1] !== ':') {
+      const end = content.indexOf('\n', index)
+      index = (end === -1 ? content.length : end) - 1
+      continue
+    }
+    if (char === '"' || char === "'" || char === '`') quote = char
+    output += char
+  }
+  return output
+}
+
+// Liste des globs d'une exception limitée à des fichiers ; null si l'exception couvre toute la règle.
+function exceptionFiles(exception) {
+  if (!exception || typeof exception !== 'object' || exception.files == null) return null
+  return [exception.files].flat().filter((glob) => typeof glob === 'string' && glob.length > 0)
+}
+
 // Retire ce qui n'est jamais une valeur visuelle : commentaires, ancres et sélecteurs.
-function stripNonVisual(content) {
-  return content
-    .replace(/\/\*[\s\S]*?\*\//g, ' ')
-    .replace(/(^|[^:'"`\\])\/\/.*$/gm, '$1')
+function stripNonVisual(content, file) {
+  return stripComments(content, { lineComments: !file.endsWith('.css') })
     .replace(/\b(?:to|href|xlinkHref|xlink:href)\s*=\s*\{?\s*(["'`])[^"'`]*\1/g, ' ')
     .replace(/\burl\(\s*(["'`]?)#[^)]*\)/g, ' ')
     .replace(/\b(?:querySelector(?:All)?|getElementById|closest|matches)\(\s*(["'`])[^"'`]*\1/g, ' ')
@@ -122,7 +160,7 @@ function applyException(result, exceptions) {
   const exception = exceptions[result.rule]
   if (!exception) return result
   // Une exception limitée à des fichiers est appliquée par la vérification elle-même.
-  if (Array.isArray(exception.files)) return result
+  if (exceptionFiles(exception)) return result
   const reason = typeof exception === 'string' ? exception : exception.reason
   return {
     ...result,
@@ -349,13 +387,13 @@ export function runDoctor({ root, profile = 'web-mobile' }) {
   // Couleur hexadécimale dans un contexte de valeur (pas une ancre href="#…" ni url(#…)),
   // fonction de couleur, rayon ou taille de police numérique non nul.
   const literalPatterns = [
-    /#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{4}|[0-9a-fA-F]{3})\b(?=['"`;)\s,])/,
+    /#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{4}|[0-9a-fA-F]{3})\b(?=['"`;)}\s,])/,
     /\b(?:rgba?|hsla?)\(/,
     /\b(?:borderRadius|br|fontSize|fos|lineHeight|lh)\s*[=:]\s*\{?\s*["'`]?(?:[1-9]|0?\.\d*[1-9])/,
     /\b(?:border-radius|font-size)\s*:\s*(?:[1-9]|0?\.\d*[1-9])/,
   ]
   const literalException = exceptions['hb.ui-no-visual-literals']
-  const literalExcluded = Array.isArray(literalException?.files) ? literalException.files.map(globToRegExp) : []
+  const literalExcluded = (exceptionFiles(literalException) ?? []).map(globToRegExp)
   const featurePackages = existsSync(join(projectRoot, 'packages'))
     ? readdirSync(join(projectRoot, 'packages'), { withFileTypes: true })
         .filter((entry) => entry.isDirectory() && entry.name !== 'ui')
@@ -371,7 +409,7 @@ export function runDoctor({ root, profile = 'web-mobile' }) {
     if (/[\\/]api-client[\\/]|[\\/]shared-types[\\/]/.test(file)) return false
     const path = relative(projectRoot, file).split(sep).join('/')
     if (literalExcluded.some((pattern) => pattern.test(path))) return false
-    const content = stripNonVisual(readText(file))
+    const content = stripNonVisual(readText(file), file)
     return literalPatterns.some((pattern) => pattern.test(content))
   })
   checks.push(
