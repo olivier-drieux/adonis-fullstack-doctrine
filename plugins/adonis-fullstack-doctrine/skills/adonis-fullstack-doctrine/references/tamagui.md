@@ -87,11 +87,11 @@ Règles : `hb.ui-role-brick`, `hb.ui-no-visual-literals`, `ed.ui-style-guard` (d
 
 Un **rôle** est la fonction d'un élément dans l'interface, indépendamment de l'écran : action de ligne, retour, tête de ligne, titre de section, état vide, chevron, compteur, chargement, notice, champ.
 
-- **Une brique par rôle**, dans `packages/ui`, identique sur web et natif. Les variantes sont des props de la brique, pas des recompositions.
+- **Une brique par rôle**, dans `packages/ui`, identique sur toutes les plateformes du profil, présentationnelle (`hb.ui-shared-boundary`). Les variantes sont des props de la brique, pas des recompositions.
 - **Rôle nouveau → brique d'abord**, dès la première occurrence ; `adv.small-duplication` ne s'applique pas ici.
 - **Aucun littéral visuel** dans `apps/` ou un package de feature : couleur, rayon, ombre, taille de police, interligne, espacement viennent des tokens.
 - **Catalogue** : la règle d'interface du projet liste chaque rôle avec sa brique et sa variante. Une maquette ou une relecture nomme la brique de chaque élément ; un élément sans rôle connu ouvre une brique ou un arbitrage.
-- **Garde automatique** : le gate `verify` refuse les littéraux (`#hex`, `rgb(`, `borderRadius={12}`, `fontSize={19}`…) et les recompositions connues (pastille `YStack` + icône à la place de la brique de tête). Les exceptions sont nommées dans le registre.
+- **Garde automatique** : le gate `verify` du projet refuse les littéraux (`#hex`, `rgb(`, `borderRadius={12}`, `fontSize={19}`, ombres, espacements hors échelle) et les recompositions connues (pastille `YStack` + icône à la place de la brique de tête). Les exceptions sont nommées dans `.doctrine-exceptions.json`.
 
 ```tsx
 // Interdit : recomposition locale d'un rôle
@@ -103,7 +103,7 @@ Un **rôle** est la fonction d'un élément dans l'interface, indépendamment de
 <IconTile name="document" />
 ```
 
-Le doctor signale `ui.literals` quand une application contient des couleurs hexadécimales ou des rayons numériques.
+Le doctor signale `ui.literals` pour les couleurs (`#hex`, `rgb(`, `hsl(`), les rayons et les tailles de police numériques non nuls dans `apps/*` et `packages/*` hors `ui`. Il ne voit ni les ombres, ni les espacements, ni les recompositions : ces contrôles appartiennent à la garde du projet.
 
 ## Native
 

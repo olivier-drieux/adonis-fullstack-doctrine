@@ -22,10 +22,11 @@ L'utilisateur exige une règle forte pour que cela n'arrive plus.
 
 ## Décision
 
-- `hb.ui-role-brick` (hard blocker) : chaque rôle d'interface récurrent a **une** brique dans `packages/ui`, utilisée à l'identique sur web et natif. Exemples de rôles : action de ligne, retour, tête de ligne, titre de section, état vide, chevron, compteur, chargement, notice. Un écran ne recompose jamais un rôle à partir de primitives. Un rôle nouveau commence par sa brique. Pour un rôle d'interface, la première occurrence suffit : `adv.small-duplication` ne s'applique pas.
-- `hb.ui-no-visual-literals` (hard blocker) : aucune couleur, rayon, ombre, taille de police ni espacement littéral hors des tokens de `packages/ui`. Les exceptions (palette de dessin, impression) sont déclarées dans le registre d'exceptions.
+- `hb.ui-role-brick` (hard blocker) : chaque rôle d'interface identifiable et appelé à revenir a **une** brique dans `packages/ui`, utilisée à l'identique sur toutes les plateformes du profil. La brique reste présentationnelle (`hb.ui-shared-boundary`) : elle reçoit des props, sans logique métier. Exemples de rôles : action de ligne, retour, tête de ligne, titre de section, état vide, chevron, compteur, chargement, notice. Un écran ne recompose jamais un rôle à partir de primitives. Un rôle nouveau commence par sa brique. Pour un rôle d'interface, la première occurrence suffit : `adv.small-duplication` ne s'applique pas.
+- `hb.ui-no-visual-literals` (hard blocker) : aucune couleur, rayon, ombre, taille de police ni espacement littéral hors des tokens de `packages/ui`. Les exceptions (palette de dessin, impression) sont déclarées dans `.doctrine-exceptions.json` du projet, avec raison et date.
 - `ed.ui-style-guard` (enforced default) : le projet tient un catalogue des rôles (rôle → brique et variante) dans sa règle d'interface. Son gate `verify` refuse automatiquement les littéraux visuels et les recompositions connues. La revue rattache chaque élément nouveau à son rôle avant de valider.
-- Le doctor ajoute la vérification `ui.literals`, qui avertit sur les couleurs hexadécimales et les rayons numériques dans les applications.
+- Le doctor ajoute la vérification `ui.literals`. Elle avertit sur les couleurs hexadécimales et fonctions de couleur, les rayons et les tailles de police numériques non nuls, dans `apps/*` et `packages/*` hors `ui`. Les ombres et espacements restent à la garde du projet.
+- Les deux règles bloquantes sont chargées avec les tranches `tamagui-component` et `react-component`, comme `hb.ui-imports`, et non à chaque tranche.
 
 ## Conséquences
 
@@ -43,4 +44,5 @@ L'utilisateur exige une règle forte pour que cela n'arrive plus.
 ## Vérification
 
 - `evaluation.test.mjs` : les trois règles sont sélectionnées pour une tranche `tamagui-component` ou `react-component`.
-- `doctor.test.mjs` : un littéral hexadécimal dans `apps/web/src` avertit `ui.literals` ; un projet propre passe.
+- `doctor.test.mjs` : ancres `href="#…"`, `url(#…)` et `borderRadius={0}` passent ; un `#hex`, un rayon, une taille de police dans un package de feature et un `rgba(` en CSS module avertissent ; les tokens de `packages/ui` sont ignorés ; une exception déclarée donne `exception`.
+- Leçon `lessons/interfaces/ui-style-drift.md`.

@@ -167,12 +167,32 @@ test('une valeur visuelle littérale avertit ui.literals', () => {
   const root = createProject()
   try {
     compliant(root)
+    write(
+      root,
+      'apps/web/src/pages/home.tsx',
+      "export const Home = () => <a href=\"#abc123\"><svg fill=\"url(#fff)\" /><YStack borderRadius={0} backgroundColor=\"$surface\" /></a>\n",
+    )
     assert.equal(runDoctor({ root, profile: 'web-mobile' }).checks.find((c) => c.id === 'ui.literals').status, 'pass')
-    write(root, 'apps/web/src/pages/home.tsx', "export const Tile = () => <YStack borderRadius={12} backgroundColor='#eef2ee' />\n")
+
+    for (const [file, content] of [
+      ['apps/web/src/pages/tile.tsx', "export const Tile = () => <YStack backgroundColor='#eef2ee' />\n"],
+      ['apps/mobile/src/row.tsx', 'export const Row = () => <YStack borderRadius={12} />\n'],
+      ['packages/features/src/title.tsx', 'export const styles = { title: { fontSize: 19 } }\n'],
+      ['apps/web/src/shadow.module.css', '.card { box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); }\n'],
+    ]) {
+      write(root, file, content)
+    }
     const result = runDoctor({ root, profile: 'web-mobile' })
     const literal = result.checks.find((c) => c.id === 'ui.literals')
     assert.equal(literal.status, 'warn')
     assert.equal(literal.rule, 'hb.ui-no-visual-literals')
+    assert.match(literal.message, /^4 fichier/)
+
+    write(root, 'packages/ui/src/tokens.ts', "export const ink = '#1f2421'\n")
+    assert.match(runDoctor({ root, profile: 'web-mobile' }).checks.find((c) => c.id === 'ui.literals').message, /^4 fichier/)
+
+    write(root, '.doctrine-exceptions.json', json({ 'hb.ui-no-visual-literals': { reason: 'palette de dessin', date: '2026-11-17' } }))
+    assert.equal(runDoctor({ root, profile: 'web-mobile' }).checks.find((c) => c.id === 'ui.literals').status, 'exception')
   } finally {
     rmSync(root, { recursive: true, force: true })
   }

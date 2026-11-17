@@ -217,9 +217,8 @@
       "profiles": ["web", "web-mobile"],
       "surfaces": ["*"],
       "slices": ["tamagui-component", "react-component"],
-      "always": true,
       "title": "Une brique partagée par rôle d'interface",
-      "rule": "Chaque rôle d'interface récurrent (action de ligne, retour, tête de ligne, titre de section, état vide, chevron, compteur, chargement, notice…) a une seule brique dans packages/ui, utilisée à l'identique sur web et natif. Un écran ne recompose jamais un rôle avec des primitives. Un rôle nouveau commence par sa brique, dès la première occurrence. Une forme différente pour un même rôle est un défaut.",
+      "rule": "Chaque rôle d'interface identifiable et appelé à revenir (action de ligne, retour, tête de ligne, titre de section, état vide, chevron, compteur, chargement, notice…) a une seule brique dans packages/ui, utilisée à l'identique sur toutes les plateformes du profil. La brique reste présentationnelle : elle reçoit des props, sans logique métier ni accès API (hb.ui-shared-boundary). Un écran ne recompose jamais un rôle avec des primitives. Un rôle nouveau commence par sa brique, dès sa première occurrence. Une forme différente pour un même rôle est un défaut.",
       "rationale": "Sans brique unique par rôle, chaque écran réinvente sa variante et le style dérive ; corriger après coup exige un audit complet (décision 0009).",
       "reference": "tamagui.md#roles"
     },
@@ -229,9 +228,8 @@
       "profiles": ["web", "web-mobile"],
       "surfaces": ["*"],
       "slices": ["tamagui-component", "react-component"],
-      "always": true,
       "title": "Aucune valeur visuelle littérale hors des tokens",
-      "rule": "Couleurs, rayons, ombres, tailles de police, interlignes et espacements viennent des tokens de packages/ui. Aucune valeur en dur dans apps/ ni dans un package de feature. Une exception (palette de dessin, impression) est déclarée dans le registre d'exceptions.",
+      "rule": "Couleurs, rayons, ombres, tailles de police, interlignes et espacements viennent des tokens de packages/ui. Aucune valeur en dur dans apps/ ni dans un package de feature. Une exception (palette de dessin, impression) est déclarée dans .doctrine-exceptions.json avec sa raison et sa date.",
       "rationale": "Une valeur littérale est une forme parallèle invisible au thème ; elle diverge au premier changement de token.",
       "reference": "tamagui.md#roles"
     },
