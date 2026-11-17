@@ -181,6 +181,8 @@ test('une valeur visuelle littérale avertit ui.literals', () => {
         "export const focus = () => document.querySelector('#add')",
         "export const byId = () => document.getElementById('#bad')",
         'export const Links = () => <><Link to="#face" /><a href=\'/x#bad\' /><svg fill="url(\'#fff\')" /></>',
+        "export const globs = ['src/**/*.tsx', 'a // b']",
+        "export const Note = () => <Text>L'écran // #fff</Text>",
         '',
       ].join('\n'),
     )
@@ -196,6 +198,9 @@ test('une valeur visuelle littérale avertit ui.literals', () => {
       ['apps/web/src/string-size.tsx', 'export const C = () => <Text fontSize="19" />\n'],
       ['apps/web/src/fraction-radius.ts', 'export const d = { borderRadius: 0.5 }\n'],
       ['apps/web/src/line-height.tsx', 'export const E = () => <Text lineHeight={28} />\n'],
+      ['apps/web/src/brace.css', '.a{color:#eef2ee}\n'],
+      ['apps/web/src/after-slashes.ts', "export const sep = ' // '; export const c = '#eef2ee'\n"],
+      ['apps/web/src/after-block.ts', "export const g = 'a/*'; export const r = { borderRadius: 8 }; export const h = '*/'\n"],
     ]) {
       write(root, file, content)
     }
@@ -203,10 +208,10 @@ test('une valeur visuelle littérale avertit ui.literals', () => {
     const literal = result.checks.find((c) => c.id === 'ui.literals')
     assert.equal(literal.status, 'warn')
     assert.equal(literal.rule, 'hb.ui-no-visual-literals')
-    assert.match(literal.message, /^9 fichier/)
+    assert.match(literal.message, /^12 fichier/)
 
     write(root, 'packages/ui/src/tokens.ts', "export const ink = '#1f2421'\n")
-    assert.match(runDoctor({ root, profile: 'web-mobile' }).checks.find((c) => c.id === 'ui.literals').message, /^9 fichier/)
+    assert.match(runDoctor({ root, profile: 'web-mobile' }).checks.find((c) => c.id === 'ui.literals').message, /^12 fichier/)
 
     write(
       root,
@@ -221,8 +226,17 @@ test('une valeur visuelle littérale avertit ui.literals', () => {
     )
     const scoped = runDoctor({ root, profile: 'web-mobile' }).checks.find((c) => c.id === 'ui.literals')
     assert.equal(scoped.status, 'warn')
-    assert.match(scoped.message, /^4 fichier/)
+    assert.match(scoped.message, /^7 fichier/)
     assert.doesNotMatch(scoped.evidence, /tile\.tsx|apps\/mobile|module\.css/)
+
+    write(
+      root,
+      '.doctrine-exceptions.json',
+      json({ 'hb.ui-no-visual-literals': { reason: 'palette de dessin', date: '2026-11-17', files: 'apps/web/src/pages/tile.tsx' } }),
+    )
+    const single = runDoctor({ root, profile: 'web-mobile' }).checks.find((c) => c.id === 'ui.literals')
+    assert.equal(single.status, 'warn')
+    assert.match(single.message, /^11 fichier/)
 
     write(root, '.doctrine-exceptions.json', json({ 'hb.ui-no-visual-literals': { reason: 'palette de dessin', date: '2026-11-17' } }))
     assert.equal(runDoctor({ root, profile: 'web-mobile' }).checks.find((c) => c.id === 'ui.literals').status, 'exception')

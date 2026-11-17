@@ -30,6 +30,6 @@ Le doctor lit `.doctrine-exceptions.json` à la racine d'un projet :
 }
 ```
 
-Une exception peut se limiter à des fichiers avec `files` (globs relatifs à la racine). Le doctor l'applique aujourd'hui à `hb.ui-no-visual-literals` : il exclut seulement ces fichiers et contrôle le reste. Voir `references/tamagui.md#roles`.
+Une exception peut se limiter à des fichiers avec `files` (un glob ou une liste de globs, relatifs à la racine). Le doctor l'applique aujourd'hui à `hb.ui-no-visual-literals` : il exclut seulement ces fichiers et contrôle le reste. Voir `references/tamagui.md#roles`.
 
 Ce fichier doit refléter ce registre. Il ne remplace pas la décision.
