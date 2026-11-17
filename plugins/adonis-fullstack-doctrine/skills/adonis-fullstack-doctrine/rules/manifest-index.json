@@ -294,7 +294,7 @@
         "tamagui-component",
         "react-component"
       ],
-      "always": true,
+      "always": false,
       "title": "Une brique partagée par rôle d'interface",
       "reference": "tamagui.md#roles"
     },
@@ -312,7 +312,7 @@
         "tamagui-component",
         "react-component"
       ],
-      "always": true,
+      "always": false,
       "title": "Aucune valeur visuelle littérale hors des tokens",
       "reference": "tamagui.md#roles"
     },

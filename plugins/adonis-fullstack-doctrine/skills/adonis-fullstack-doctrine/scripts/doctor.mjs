@@ -320,21 +320,39 @@ export function runDoctor({ root, profile = 'web-mobile' }) {
     ),
   )
 
-  const literalPattern = /#[0-9a-fA-F]{3,8}\b(?=['"`;)\s,])|borderRadius[=:]\s*\{?\s*\d/
+  // Couleur hexadécimale dans un contexte de valeur (pas une ancre href="#…" ni url(#…)),
+  // fonction de couleur, rayon ou taille de police numérique non nul.
+  const literalPatterns = [
+    /(?<!href=["'`]|url\()#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{4}|[0-9a-fA-F]{3})\b(?=['"`;)\s,])/,
+    /\b(?:rgba?|hsla?)\(/,
+    /\b(?:borderRadius|fontSize)\s*[=:]\s*\{?\s*[1-9]/,
+    /\b(?:border-radius|font-size)\s*:\s*[1-9]/,
+  ]
+  const featurePackages = existsSync(join(projectRoot, 'packages'))
+    ? readdirSync(join(projectRoot, 'packages'), { withFileTypes: true })
+        .filter((entry) => entry.isDirectory() && entry.name !== 'ui')
+        .map((entry) => join(projectRoot, 'packages', entry.name, 'src'))
+    : []
   const literalFiles = [
     ...(web ? walk(join(web, 'src')) : []),
     ...(mobile ? walk(join(mobile, 'src')) : []),
     ...(mobile ? walk(join(mobile, 'app')) : []),
-  ].filter((file) => /\.(?:tsx|jsx)$/.test(file) && !isTestFile(file) && literalPattern.test(readText(file)))
+    ...featurePackages.flatMap((directory) => walk(directory)),
+  ].filter((file) => {
+    if (!/\.(?:tsx|jsx|ts|css)$/.test(file) || isTestFile(file)) return false
+    if (/[\\/]api-client[\\/]|[\\/]shared-types[\\/]/.test(file)) return false
+    const content = readText(file)
+    return literalPatterns.some((pattern) => pattern.test(content))
+  })
   checks.push(
     check(
       'ui.literals',
       'hb.ui-no-visual-literals',
       literalFiles.length === 0 ? 'pass' : 'warn',
       literalFiles.length === 0
-        ? 'Aucune couleur hexadécimale ni rayon numérique dans les applications.'
+        ? 'Aucune couleur, aucun rayon ni aucune taille de police littérale hors de packages/ui.'
         : `${literalFiles.length} fichier(s) contiennent des valeurs visuelles littérales.`,
-      literalFiles.slice(0, 5).map((file) => relative(projectRoot, file)).join(', ') || 'apps/web, apps/mobile',
+      literalFiles.slice(0, 5).map((file) => relative(projectRoot, file)).join(', ') || 'apps/*, packages/* (hors ui)',
       'Utiliser les tokens et les briques de rôle de @scope/ui (décision 0009).',
     ),
   )

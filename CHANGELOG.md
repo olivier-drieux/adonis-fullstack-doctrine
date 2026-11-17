@@ -7,7 +7,8 @@
 - `hb.ui-role-brick` : une brique partagée par rôle d'interface, identique web et natif, dès la première occurrence.
 - `hb.ui-no-visual-literals` : aucune couleur, rayon, ombre, taille ou espacement littéral hors des tokens.
 - `ed.ui-style-guard` : catalogue des rôles et garde automatique dans le gate `verify`.
-- Doctor : vérification `ui.literals`.
+- Doctor : vérification `ui.literals` (couleurs, rayons et tailles de police littéraux dans `apps/*` et `packages/*` hors `ui`, exceptions déclarées).
+- Leçon `lessons/interfaces/ui-style-drift.md`.
 - Référence `tamagui.md#roles` et décision `0009-ui-role-bricks.md`.
 
 ### Changed

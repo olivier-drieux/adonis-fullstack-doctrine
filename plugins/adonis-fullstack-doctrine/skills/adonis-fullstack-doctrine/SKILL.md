@@ -133,10 +133,12 @@ L'agent propose ; il ne pousse jamais en silence. Voir [patterns/doctrine-learni
 - `decisions/0006-six-surfaces.md`
 - `decisions/0007-doctrine-learning.md`
 - `decisions/0008-api-client-facades.md`
+- `decisions/0009-ui-role-bricks.md`
 - `decisions/0010-commits-english.md`
 - `lessons/inbox.md`
 - `lessons/outillage/api-client-freshness.md`
 - `lessons/interfaces/tamagui-single-instance.md`
+- `lessons/interfaces/ui-style-drift.md`
 - `lessons/formulaires/server-errors.md`
 - `lessons/performance/flashlist-keys.md`
 - `lessons/securite/no-pii-in-logs.md`
