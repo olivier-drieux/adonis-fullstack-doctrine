@@ -7,7 +7,7 @@ description: >-
   Tuyau, TanStack Query and TanStack Form, authentication, testing, operations, and
   doctrine learning. Ask exactly one override question on a hard blocker.
 metadata:
-  version: "0.5.0"
+  version: "0.6.0"
 ---
 
 # AdonisJS Fullstack Doctrine
@@ -142,6 +142,20 @@ L'agent propose ; il ne pousse jamais en silence. Voir [patterns/doctrine-learni
 - `lessons/formulaires/server-errors.md`
 - `lessons/performance/flashlist-keys.md`
 - `lessons/securite/no-pii-in-logs.md`
+- `lessons/interfaces/inertia-first-render-props.md`
+- `lessons/interfaces/responsive-text-without-effect.md`
+- `lessons/interfaces/tamagui-v3-conditions.md`
+- `lessons/interfaces/tamagui-native-accessibility.md`
+- `lessons/interfaces/reanimated-and-tabs.md`
+- `lessons/formulaires/tanstack-reset-default-values.md`
+- `lessons/formulaires/action-lock-before-await.md`
+- `lessons/performance/query-cache-per-domain.md`
+- `lessons/serveur/multipart-empty-fields.md`
+- `lessons/serveur/business-error-status.md`
+- `lessons/serveur/utc-dates.md`
+- `lessons/serveur/lucid-physical-names.md`
+- `lessons/serveur/mariadb-migration-order.md`
+- `lessons/serveur/ace-commands-providers.md`
 - `exceptions.md` (registre des écarts acceptés)
 
 ## Guardrails

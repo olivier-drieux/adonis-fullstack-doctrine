@@ -86,6 +86,8 @@ Une page Inertia possède ses données. Utiliser :
 - `usePoll` pour le rafraîchissement ;
 - `inertia.scroll` + `InfiniteScroll` pour les listes infinies.
 
+Le contrôleur fournit en props toutes les données du premier rendu. Aucun `useEffect` ne charge le contenu principal au montage : chaque vague d'appels ajoute un aller-retour.
+
 `useHttp` est réservé à une requête typée qui ne remplace pas la page, l'historique ou les props. Ce n'est pas un cache.
 
 ## Styling
@@ -98,6 +100,8 @@ Tamagui first :
 - CSS Modules uniquement pour l'impression, un layout DOM complexe ou un composant tiers.
 
 Interdits : Tailwind, styled-components, Emotion, CSS global non scopé.
+
+Un texte masqué sous un breakpoint l'est par CSS (media query ou prop média), jamais dans un effet : le premier rendu est déjà le bon.
 
 ## Navigation
 

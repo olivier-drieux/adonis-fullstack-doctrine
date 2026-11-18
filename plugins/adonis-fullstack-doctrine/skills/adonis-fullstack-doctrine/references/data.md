@@ -20,6 +20,7 @@ export default defineConfig({
         user: env.get('DB_USER'),
         password: env.get('DB_PASSWORD'),
         database: env.get('DB_DATABASE'),
+        timezone: 'Z',
       },
     },
   },
@@ -32,7 +33,7 @@ export default defineConfig({
 
 ## Lucid
 
-- Un modèle par table, relations dans le modèle.
+- Un modèle par table, relations dans le modèle, `static table` explicite.
 - Pas de repository au-dessus de Lucid pour le code ordinaire.
 - Les agrégats de requête modèle sont dans `$extras` :
 
@@ -46,6 +47,7 @@ const count = Number(rows[0].$extras.visits_count ?? 0)
 - Les booléens `tinyint(1)` sont coercés au boundary du modèle (`consume`/`prepare`), pas dans les contrôleurs.
 - Les colonnes JSON sont normalisées au boundary : distinguer `null`, vide et malformé.
 - Les mutations conditionnelles vérifient le nombre de lignes affectées.
+- SQL brut, `join` et `select` explicites : colonnes physiques snake_case. Un `select` partiel inclut les colonnes lues par les getters.
 
 ## Migrations
 
@@ -58,6 +60,10 @@ Une migration qui change la sémantique porte aussi la transition de données.
 - Regrouper les réécritures d'enum MariaDB.
 - Tester : installation neuve, montée avec données, reprise partielle, rollback supporté, re-montée.
 - Sérialiser les runners de migration au déploiement.
+- `this.schema.*` est mis en file et exécuté après `up()`, sans `await`. Le travail de données va dans `this.defer`, sinon il part avant le DDL.
+- Suppression dans l'ordre : clé étrangère (`dropForeign(cols, name)`), index, colonne.
+- Relâcher une contrainte avant de réécrire les données, puis la remettre.
+- MariaDB ne rollback pas le DDL : chaque étape doit supporter une relance après échec partiel.
 
 ```ts
 export default class AddProjectStatus extends BaseSchema {
@@ -65,7 +71,9 @@ export default class AddProjectStatus extends BaseSchema {
     this.schema.alterTable('projects', (table) => {
       table.string('status').notNullable().defaultTo('draft')
     })
-    await this.db.from('projects').update({ status: 'active' }).whereNotNull('activated_at')
+    this.defer(async (db) => {
+      await db.from('projects').update({ status: 'active' }).whereNotNull('activated_at')
+    })
   }
 
   async down() {
@@ -82,6 +90,13 @@ export default class AddProjectStatus extends BaseSchema {
 - Lecture puis écriture concurrente : `forUpdate()` ou claim atomique conditionnel.
 - Effets de bord externes hors transaction quand c'est possible.
 - Jobs dépendants dispatchés après le commit.
+
+## Dates
+
+- Stockage et comparaisons en UTC : `.toUTC()` avant écriture, `.toJSDate()` pour les paramètres du query builder.
+- Connexion `mysql2` avec `timezone: 'Z'`.
+- Jours civils calculés dans le fuseau métier (par exemple `Europe/Paris`), bornes converties en UTC.
+- `autoCreate` et `autoUpdate` lisent l'heure système, pas l'horloge injectée : renseigner la colonne quand le test contrôle le temps.
 
 ## Rétention
 

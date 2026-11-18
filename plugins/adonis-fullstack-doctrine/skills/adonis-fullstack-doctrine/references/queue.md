@@ -85,6 +85,7 @@ export default class SendInvitationEmail extends BaseJob {
 - Rattrapage borné : ne pas rejouer dix jours de jobs d'un coup.
 - Heartbeat du scheduler séparé du succès métier.
 - Une horloge contrôlée dans les tests.
+- Une tâche périodique est livrée quand elle est planifiée (job cron dans le `boot()` d'un provider), pas quand une commande Ace existe. Tester la planification.
 
 ## Tests
 
