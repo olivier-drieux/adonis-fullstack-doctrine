@@ -1,5 +1,5 @@
 {
-  "version": "0.5.0",
+  "version": "0.6.0",
   "profiles": {
     "web": "AdonisJS 7 + Inertia 3 + React 19 + Tamagui web, sans application mobile.",
     "web-mobile": "Profil web complété par Expo/React Native, UI Tamagui partagée et authentification mobile.",

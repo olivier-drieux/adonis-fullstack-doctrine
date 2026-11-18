@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.6.0 — 2026-11-18
+
+### Added
+
+- Quatorze leçons issues du projet pilote olau, dont une nouvelle catégorie `serveur` :
+  - serveur : champs multipart vides, statut des erreurs métier, dates UTC, noms physiques Lucid, ordre des migrations MariaDB, commande planifiée et provider ;
+  - web : données du premier rendu Inertia, texte responsive sans effet ;
+  - formulaires : `reset` TanStack avec `keepDefaultValues`, verrou avant le premier `await` ;
+  - performance : cache TanStack Query réglé par domaine ;
+  - interfaces : conditions Tamagui 3, accessibilité native, Reanimated et onglets.
+- `data.md#dates`.
+- `tamagui.md#accessibility` : props web et natives séparées, interrupteur natif, focus initial des dialogues.
+- Gabarit de leçon : source « projet pilote ».
+
+### Changed
+
+- `data.md#migrations` : travail de données dans `this.defer`, ordre de suppression, relance après échec ; l'exemple n'attend plus `this.db` dans `up()`.
+- `forms.md`, `web.md`, `tamagui.md`, `mobile.md`, `queue.md`, `api.md` : règles concises tirées des leçons.
+
 ## 0.5.0 — 2026-11-17
 
 ### Added

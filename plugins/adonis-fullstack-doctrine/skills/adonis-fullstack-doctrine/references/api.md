@@ -52,6 +52,7 @@ Contrat stable :
 - `403` interdit, `404` introuvable, `409` conflit, `422` validation.
 - Jamais de stack, de message d'exception brut, de payload ou de token dans la réponse.
 - Les décisions métier ne parsent jamais un texte humain ou fournisseur.
+- Une erreur métier attendue porte `status` 4xx et un `code`. Sans statut, elle devient une 500 journalisée en erreur et envoyée à Sentry.
 
 ## Inventory
 
@@ -109,6 +110,8 @@ Le contrôleur valide, délègue, transforme et répond. Le service orchestre :
 - jobs.
 
 Les I/O externes restent hors transaction quand c'est possible. Un job dépendant est dispatché **après** le commit de la transaction qui revendique la ligne.
+
+Un service dont le constructeur lit la config est lié par une factory dans un provider : `this.app.container.singleton(X, () => new X(config.get('x')))`.
 
 ## Transformers
 

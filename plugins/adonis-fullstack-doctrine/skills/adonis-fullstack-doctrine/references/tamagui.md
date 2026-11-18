@@ -177,6 +177,18 @@ export type CardProps = GetProps<typeof Card>
 - Recomposer un rôle (pastille, titre, état vide) au lieu d'utiliser sa brique.
 - Écrire une couleur ou un rayon en dur dans une page.
 - Mélanger CSS Modules et props Tamagui sur le même composant sans raison.
+- Tamagui 3 : une prop qui ne porte que sa condition (`"phone:column"`, `{ hover }`) remplace le défaut du composant. Écrire la base d'abord : `"row phone:column"`, `{ default, hover }`.
+- Tamagui 3 : pas de clé `true` dans les échelles de tokens du projet. Le poids de police n'est plus posé sur les conteneurs : le HTML brut l'hérite par la variable de poids de la police.
+- Tamagui 3.2.0 : `useMedia` lu dans une branche apparue après le premier rendu garde sa valeur initiale.
+- Une montée de version se prouve au rendu, pas au typecheck.
+
+## Accessibility
+
+Chaque brique de rôle porte son accessibilité sur les deux plateformes (`hb.ui-role-brick`).
+
+- Props séparées : `role` et `aria-*` sur le web, `accessibilityRole` et `accessibilityState` sur le natif. Une prop native transmise au DOM déclenche un avertissement React et perd le rôle.
+- Interrupteur natif : `Pressable` avec `accessibilityRole="switch"`, `accessibilityState={{ checked, disabled }}` et `focusable`. Activation vérifiée avec TalkBack.
+- Focus initial d'un dialogue : `onOpenAutoFocus`, `details.cancel()` puis `target.focus()`. Pas de minuterie.
 
 ## Tests
 

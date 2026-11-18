@@ -72,6 +72,8 @@ export const api = createTuyauReactQueryClient({
 - Une façade par feature est une duplication à corriger (`ed.api-facade-single`), pas une violation du hard blocker.
 - Pas de `fetch` ou `axios` pour les endpoints typés.
 
+`staleTime` et `gcTime` se règlent par domaine : longs pour le référentiel, courts pour les données sensibles. Précharger après le premier contenu affiché. Lire la fraîcheur depuis le cache (`queryClient.getQueryCache().find({ queryKey })?.isStaleByTime(staleTime)`) au moment utile ; ne pas s'abonner à `isStale` ou `isFetching` pour le rendu.
+
 ## Keyboard
 
 `react-native-keyboard-controller` pour les écrans de formulaire :
@@ -135,7 +137,10 @@ Voir [auth.md](auth.md#mobile). Le token vit dans `expo-secure-store`, jamais da
 - deep links déclarés dans `app.config.ts` ;
 - écrans d'auth séparés du groupe applicatif ;
 - retour arrière cohérent ;
-- pas de navigation impérative dispersée.
+- pas de navigation impérative dispersée ;
+- onglet frère : `router.navigate` vers la racine de l'onglet, pas `dismissTo`.
+
+Les animations Reanimated importent `Easing` depuis `react-native-reanimated`, jamais depuis `react-native`.
 
 ## Build
 

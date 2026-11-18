@@ -88,6 +88,9 @@ const form = useAppForm({
 </form.Subscribe>
 ```
 
+- Données serveur chargées avec `form.reset(valeurs, { keepDefaultValues: true })`. Sans l'option, le rendu suivant réécrit les champs avec les `defaultValues`.
+- Une action qui ouvre un sélecteur, une caméra ou une fenêtre système pose un verrou synchrone (`useRef`) avant son premier `await` et le libère dans `finally`.
+
 L'API exacte de TanStack Form évolue : vérifier les types installés avant d'utiliser `setFieldMeta`, `pushValue` ou `removeValue`.
 
 ## Validation
@@ -98,6 +101,8 @@ VineJS serveur est la seule source.
 - Le client affiche les erreurs serveur, champ par champ.
 - Le client ne recopie pas le schéma dans Zod, Yup ou un validateur maison.
 - Un code d'erreur stable permet de mapper le message sans parser le texte.
+- Multipart : un champ vide arrive en `null` (`convertEmptyStringsToNull`). Préférer `vine.number().nullable()` ; une transformation sur un champ `.nullable()` reçoit `null` et doit le traiter.
+- `maxFields` compte toutes les parts, champs et fichiers.
 
 ```ts
 // app/validators/project.ts

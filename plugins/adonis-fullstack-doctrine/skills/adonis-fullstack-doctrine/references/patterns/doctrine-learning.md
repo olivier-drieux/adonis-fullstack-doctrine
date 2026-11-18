@@ -67,8 +67,8 @@ L'agent propose, il ne pousse jamais sans accord.
 # Titre
 
 - Date : AAAA-MM-JJ
-- Catégorie : outillage / interfaces / formulaires / performance / sécurité
-- Source : correction utilisateur / gate / revue
+- Catégorie : outillage / interfaces / formulaires / performance / sécurité / serveur
+- Source : correction utilisateur / gate / revue / projet pilote
 
 ## Erreur
 
