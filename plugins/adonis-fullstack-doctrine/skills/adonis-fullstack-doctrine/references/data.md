@@ -80,6 +80,7 @@ export default class AddProjectStatus extends BaseSchema {
 
 - Écritures multiples : transaction explicite.
 - Lecture puis écriture concurrente : `forUpdate()` ou claim atomique conditionnel.
+- Verrou seulement si la transaction écrit, ou décide d'une écriture d'après la lecture (décision 0012). Une lecture pure ne verrouille rien ; un service partagé verrouille par défaut pour une écriture, pas pour une lecture.
 - Effets de bord externes hors transaction quand c'est possible.
 - Jobs dépendants dispatchés après le commit.
 

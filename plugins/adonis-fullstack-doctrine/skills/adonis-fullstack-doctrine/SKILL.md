@@ -7,7 +7,7 @@ description: >-
   Tuyau, TanStack Query and TanStack Form, authentication, testing, operations, and
   doctrine learning. Ask exactly one override question on a hard blocker.
 metadata:
-  version: "0.5.0"
+  version: "0.6.0"
 ---
 
 # AdonisJS Fullstack Doctrine
@@ -135,6 +135,8 @@ L'agent propose ; il ne pousse jamais en silence. Voir [patterns/doctrine-learni
 - `decisions/0008-api-client-facades.md`
 - `decisions/0009-ui-role-bricks.md`
 - `decisions/0010-commits-english.md`
+- `decisions/0011-shared-api-surface-controllers.md`
+- `decisions/0012-read-locks.md`
 - `lessons/inbox.md`
 - `lessons/outillage/api-client-freshness.md`
 - `lessons/interfaces/tamagui-single-instance.md`

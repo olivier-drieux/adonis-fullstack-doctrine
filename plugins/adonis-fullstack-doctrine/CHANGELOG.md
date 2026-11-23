@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.6.0 — 2026-11-23
+
+### Added
+
+- `ed.locks-for-writes` : verrou seulement quand la transaction écrit ou décide d'une écriture ; une lecture pure ne verrouille rien.
+- Décisions `0011-shared-api-surface-controllers.md` et `0012-read-locks.md`.
+
+### Changed
+
+- `hb.api-surfaces` : un même contrôleur peut servir `api.internal` et `api.external` quand seule la garde diffère ; il lit l'utilisateur par `ctx.auth.getUserOrFail()`, la garde vient du middleware de la route. Un fichier de routes de surface ne naît qu'avec sa première route. Décision 0006 amendée.
+- `references/api.md#surfaces` et `references/data.md#transactions` alignés.
+
 ## 0.5.0 — 2026-11-17
 
 ### Added

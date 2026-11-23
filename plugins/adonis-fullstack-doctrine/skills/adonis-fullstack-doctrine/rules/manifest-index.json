@@ -1,5 +1,5 @@
 {
-  "version": "0.5.0",
+  "version": "0.6.0",
   "profiles": [
     "web",
     "web-mobile",
@@ -843,6 +843,23 @@
       "always": false,
       "title": "Logique métier dans les services",
       "reference": "api.md#services"
+    },
+    {
+      "id": "ed.locks-for-writes",
+      "level": "enforced_default",
+      "profiles": [
+        "*"
+      ],
+      "surfaces": [
+        "*"
+      ],
+      "slices": [
+        "service",
+        "queue-job"
+      ],
+      "always": false,
+      "title": "Verrou seulement pour écrire",
+      "reference": "data.md#transactions"
     },
     {
       "id": "ed.transformer",
