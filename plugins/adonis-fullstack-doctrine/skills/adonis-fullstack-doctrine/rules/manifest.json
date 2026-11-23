@@ -1,5 +1,5 @@
 {
-  "version": "0.5.0",
+  "version": "0.6.0",
   "profiles": {
     "web": "AdonisJS 7 + Inertia 3 + React 19 + Tamagui web, sans application mobile.",
     "web-mobile": "Profil web complété par Expo/React Native, UI Tamagui partagée et authentification mobile.",
@@ -284,7 +284,7 @@
       "surfaces": ["*"],
       "slices": ["api-endpoint", "webhook", "public-link", "routing"],
       "title": "Six surfaces HTTP explicites",
-      "rule": "Classer chaque route par rôle : web, api.internal, api.external, webhooks, runtime, public. Une surface a son fichier de routes, sa chaîne de middleware et ses contrôleurs. Un contrôleur ne traverse jamais deux surfaces.",
+      "rule": "Classer chaque route par rôle : web, api.internal, api.external, webhooks, runtime, public. Une surface a son fichier de routes et sa chaîne de middleware ; un fichier de routes ne naît qu'avec sa première route. Un contrôleur ne traverse jamais deux surfaces, sauf api.internal et api.external quand seule la garde diffère : il lit l'utilisateur par ctx.auth.getUserOrFail(), la garde vient du middleware de la route et le préfixe du fichier de routes (décision 0011).",
       "rationale": "Les frontières de sécurité sont plus sûres quand elles sont structurelles que quand elles reposent sur la mémoire du développeur.",
       "reference": "api.md#surfaces"
     },
@@ -584,6 +584,17 @@
       "rule": "Les contrôleurs restent fins. Les services orchestrent les écritures, les transactions et les effets de bord. Les transactions sont explicites ; les I/O externes restent hors transaction quand c'est possible.",
       "rationale": "Un contrôleur qui orchestre devient impossible à tester et à réutiliser depuis un job ou une commande.",
       "reference": "api.md#services"
+    },
+    {
+      "id": "ed.locks-for-writes",
+      "level": "enforced_default",
+      "profiles": ["*"],
+      "surfaces": ["*"],
+      "slices": ["service", "queue-job"],
+      "title": "Verrou seulement pour écrire",
+      "rule": "Une transaction prend un verrou (forUpdate, forShare) seulement si elle écrit, ou décide d'une écriture d'après la lecture. Une lecture pure ne verrouille rien. Un service partagé entre lecture et écriture verrouille par défaut pour une écriture, pas pour une lecture ; une lecture qui décide d'une écriture demande le verrou.",
+      "rationale": "Un verrou par défaut sérialise toutes les lectures d'une même ressource sans gain de cohérence (décision 0012).",
+      "reference": "data.md#transactions"
     },
     {
       "id": "ed.transformer",

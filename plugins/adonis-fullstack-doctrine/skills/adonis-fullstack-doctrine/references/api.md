@@ -13,7 +13,33 @@ Chaque route est classée par **rôle**, pas par préfixe d'URL.
 | `runtime` | Santé, MCP, ponts opérateur | middleware dédié | inactif |
 | `public` | Liens tokenisés anonymes | token/signature | inactif |
 
-Un contrôleur ne traverse jamais deux surfaces. Chaque surface a son fichier de routes et sa chaîne de middleware.
+Chaque surface a son fichier de routes et sa chaîne de middleware. Un fichier de routes de surface ne naît qu'avec sa première route.
+
+Un contrôleur ne traverse jamais deux surfaces, sauf `api.internal` et `api.external` quand seule la garde diffère (décision 0011) :
+
+- le contrôleur lit l'utilisateur par `ctx.auth.getUserOrFail()`, sans nom de garde ;
+- la garde est fixée par le middleware `auth` de la route ;
+- le préfixe d'URL et le nom de route viennent du fichier de routes ;
+- aucun partage avec `web`, `public`, `webhooks` ou `runtime` ;
+- un comportement qui diffère selon la surface exige deux contrôleurs.
+
+```ts
+// start/routes/api_internal.ts
+router
+  .group(() => {
+    router.get('/projects', [controllers.ApiProjects, 'index']).as('api_internal.projects.index')
+  })
+  .prefix('/api/internal')
+  .use(middleware.auth({ guards: ['web'] }))
+
+// start/routes/api_external.ts
+router
+  .group(() => {
+    router.get('/projects', [controllers.ApiProjects, 'index']).as('api_external.projects.index')
+  })
+  .prefix('/api/external')
+  .use(middleware.auth({ guards: ['api'] }))
+```
 
 ```text
 start/routes.ts              web
